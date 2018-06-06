@@ -79,6 +79,16 @@ class _MyHomePageState extends State<MyHomePage> {
                           height: 1.5,
                         ),
                       ),
+                      new TextSpan(
+                        text: 'Artist Name',
+                        style: new TextStyle(
+                          color: Colors.white.withOpacity(0.75),
+                          fontSize: 12.0,
+                          letterSpacing: 3.0,
+                          height: 1.5,
+
+                        ),
+                      )
                     ],
                   )),
                   new Row(
