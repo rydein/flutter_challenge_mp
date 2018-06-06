@@ -30,6 +30,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        leading: new IconButton(
+          icon: new Icon(
+            Icons.menu,
+          ),
+          color: const Color(0xFFDDDDDD),
+          onPressed: () {},
+        ),
         title: new Text(''),
       ),
       body: new Center(
