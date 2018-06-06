@@ -7,11 +7,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Music Player',
+      debugShowCheckedModeBanner: false,
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new MyHomePage(title: 'Flutter Demo Home Page'),
+      home: new MyHomePage(),
     );
   }
 }
@@ -25,7 +26,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -34,15 +34,23 @@ class _MyHomePageState extends State<MyHomePage> {
         elevation: 0.0,
         leading: new IconButton(
           icon: new Icon(
-            Icons.menu,
+            Icons.arrow_back_ios,
           ),
           color: const Color(0xFFDDDDDD),
           onPressed: () {},
         ),
         title: new Text(''),
+        actions: <Widget>[
+          new IconButton(
+            icon: new Icon(
+              Icons.menu,
+            ),
+            color: const Color(0xFFDDDDDD),
+            onPressed: () {},
+          ),
+        ],
       ),
-      body: new Center(
-      ),
+      body: new Center(),
     );
   }
 }
