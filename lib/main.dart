@@ -54,6 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
       body: new Column(
         children: <Widget>[
           // Seek bar
+          new Expanded(
+            child: new Container(),
+          ),
 
           // Visualizer
           new Container(
@@ -64,38 +67,40 @@ class _MyHomePageState extends State<MyHomePage> {
           // Song title, artist name, and controls
           new Container(
               color: accentColor,
-              child: new Column(
-                children: <Widget>[
-                  new RichText(
-                      text: new TextSpan(
-                    text: '',
-                    children: [
-                      new TextSpan(
-                        text: 'Song Title\n',
-                        style: new TextStyle(
-                          color: Colors.white,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 4.0,
-                          height: 1.5,
+              child: new Padding(
+                padding: const EdgeInsets.only(top: 40.0, bottom: 50.0),
+                child: new Column(
+                  children: <Widget>[
+                    new RichText(
+                        text: new TextSpan(
+                      text: '',
+                      children: [
+                        new TextSpan(
+                          text: 'Song Title\n',
+                          style: new TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 4.0,
+                            height: 1.5,
+                          ),
                         ),
-                      ),
-                      new TextSpan(
-                        text: 'Artist Name',
-                        style: new TextStyle(
-                          color: Colors.white.withOpacity(0.75),
-                          fontSize: 12.0,
-                          letterSpacing: 3.0,
-                          height: 1.5,
-
-                        ),
-                      )
-                    ],
-                  )),
-                  new Row(
-                    children: <Widget>[],
-                  )
-                ],
+                        new TextSpan(
+                          text: 'Artist Name',
+                          style: new TextStyle(
+                            color: Colors.white.withOpacity(0.75),
+                            fontSize: 12.0,
+                            letterSpacing: 3.0,
+                            height: 1.5,
+                          ),
+                        )
+                      ],
+                    )),
+                    new Row(
+                      children: <Widget>[],
+                    )
+                  ],
+                ),
               )),
         ],
       ),
