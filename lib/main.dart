@@ -50,7 +50,44 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: new Center(),
+      body: new Column(
+        children: <Widget>[
+          // Seek bar
+
+          // Visualizer
+          new Container(
+            width: double.infinity,
+            height: 125.0,
+          ),
+
+          // Song title, artist name, and controls
+          new Container(
+              color: Colors.black,
+              child: new Column(
+                children: <Widget>[
+                  new RichText(
+                      text: new TextSpan(
+                    text: '',
+                    children: [
+                      new TextSpan(
+                        text: 'Song Title\n',
+                        style: new TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 4.0,
+                          height: 1.5,
+                        ),
+                      ),
+                    ],
+                  )),
+                  new Row(
+                    children: <Widget>[],
+                  )
+                ],
+              )),
+        ],
+      ),
     );
   }
 }
