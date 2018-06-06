@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_challenge_mp/theme.dart';
 
 void main() => runApp(new MyApp());
 
@@ -62,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           // Song title, artist name, and controls
           new Container(
-              color: Colors.black,
+              color: accentColor,
               child: new Column(
                 children: <Widget>[
                   new RichText(
