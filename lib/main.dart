@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_challenge_mp/songs.dart';
 import 'package:flutter_challenge_mp/theme.dart';
 
 void main() => runApp(new MyApp());
@@ -55,7 +56,16 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           // Seek bar
           new Expanded(
-            child: new Container(),
+            child: new Center(
+              child: new Container(
+                width: 125.0,
+                height: 125.0,
+                child: new Image.network(
+                  demoPlaylist.songs[0].albumArtUrl,
+                  fit: BoxFit.cover
+                )
+              )
+            ),
           ),
 
           // Visualizer
