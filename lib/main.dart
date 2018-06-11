@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_challenge_mp/songs.dart';
 import 'package:flutter_challenge_mp/theme.dart';
@@ -57,15 +59,15 @@ class _MyHomePageState extends State<MyHomePage> {
           // Seek bar
           new Expanded(
             child: new Center(
-              child: new Container(
-                width: 125.0,
-                height: 125.0,
-                child: new Image.network(
-                  demoPlaylist.songs[0].albumArtUrl,
-                  fit: BoxFit.cover
-                )
-              )
-            ),
+                child: new Container(
+              width: 125.0,
+              height: 125.0,
+              child: new ClipOval(
+                clipper: new CircleClipper(),
+                child: new Image.network(demoPlaylist.songs[0].albumArtUrl,
+                    fit: BoxFit.cover),
+              ),
+            )),
           ),
 
           // Visualizer
@@ -123,25 +125,24 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             new Expanded(child: new Container()),
                             new RawMaterialButton(
-                              shape: new CircleBorder(),
-                              fillColor: Colors.white,
-                              splashColor: lightAccentColor,
-                              highlightColor: lightAccentColor.withOpacity(0.5),
-                              elevation: 10.0,
-                              highlightElevation: 5.0,
-                              onPressed: () {
-                                // TODO
-                              },
-                              child: new Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: new Icon(
-                                  Icons.play_arrow,
-                                  color: darkAccentColor,
-                                  size: 35.0,
-                                ),
-                              )
-
-                            ),
+                                shape: new CircleBorder(),
+                                fillColor: Colors.white,
+                                splashColor: lightAccentColor,
+                                highlightColor:
+                                    lightAccentColor.withOpacity(0.5),
+                                elevation: 10.0,
+                                highlightElevation: 5.0,
+                                onPressed: () {
+                                  // TODO
+                                },
+                                child: new Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: new Icon(
+                                    Icons.play_arrow,
+                                    color: darkAccentColor,
+                                    size: 35.0,
+                                  ),
+                                )),
                             new Expanded(child: new Container()),
                             new IconButton(
                               icon: new Icon(
@@ -162,5 +163,20 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+}
+
+class CircleClipper extends CustomClipper<Rect> {
+  @override
+  Rect getClip(Size size) {
+    return new Rect.fromCircle(
+      center: new Offset(size.width / 2, size.height / 2),
+      radius: min(size.width, size.height) / 2,
+    );
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Rect> oldClipper) {
+    return true;
   }
 }
