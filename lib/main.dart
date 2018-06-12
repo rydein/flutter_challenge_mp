@@ -62,11 +62,15 @@ class _MyHomePageState extends State<MyHomePage> {
           new Expanded(
             child: new Center(
                 child: new Container(
-              width: 125.0,
-              height: 125.0,
+              width: 140.0,
+              height: 140.0,
               child: new RadialSeekBar(
-                progressPercent: 0.2,
-                thumbPosition: 0.2,
+                trackColor: const Color(0xFFDDDDDD),
+                progressPercent: 0.25,
+                progressColor: accentColor,
+                thumbPosition: 0.25,
+                thumbColor: lightAccentColor,
+                innerPadding: const EdgeInsets.all(10.0),
                 child: new ClipOval(
                   clipper: new CircleClipper(),
                   child: new Image.network(demoPlaylist.songs[0].albumArtUrl,
@@ -99,6 +103,8 @@ class RadialSeekBar extends StatefulWidget {
   final double thumbSize;
   final Color thumbColor;
   final double thumbPosition;
+  final EdgeInsets outerPadding;
+  final EdgeInsets innerPadding;
   final Widget child;
 
   RadialSeekBar({
@@ -110,6 +116,8 @@ class RadialSeekBar extends StatefulWidget {
     this.thumbSize = 10.0,
     this.thumbColor = Colors.black,
     this.thumbPosition = 0.0,
+    this.outerPadding = const EdgeInsets.all(0.0),
+    this.innerPadding = const EdgeInsets.all(0.0),
     this.child,
   });
   @override
@@ -117,20 +125,41 @@ class RadialSeekBar extends StatefulWidget {
 }
 
 class _RadialSeekBarState extends State<RadialSeekBar> {
+  EdgeInsets _insetsForPainter() {
+    // make room for painted track, progress, and thumb. we divide by 2.0
+    // because we want to allow flush painting against the track, so we only
+    // need to account the thickness outside the track, not inside.
+    final outerThickness = max(
+          widget.trackWidth,
+          max(
+            widget.progressWidth,
+            widget.thumbSize,
+          ),
+        ) /
+        2.0;
+    return new EdgeInsets.all(outerThickness);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return new CustomPaint(
-      painter: new RadialSeekBarPainter(
-        trackWidth: widget.trackWidth,
-        trackColor: widget.trackColor,
-        progressWidth: widget.progressWidth,
-        progressColor: widget.progressColor,
-        progressPercent: widget.progressPercent,
-        thumbSize: widget.thumbSize,
-        thumbColor: widget.thumbColor,
-        thumbPosition: widget.thumbPosition,
+    return new Padding(
+      padding: widget.outerPadding,
+      child: new CustomPaint(
+        foregroundPainter: new RadialSeekBarPainter(
+          trackWidth: widget.trackWidth,
+          trackColor: widget.trackColor,
+          progressWidth: widget.progressWidth,
+          progressColor: widget.progressColor,
+          progressPercent: widget.progressPercent,
+          thumbSize: widget.thumbSize,
+          thumbColor: widget.thumbColor,
+          thumbPosition: widget.thumbPosition,
+        ),
+        child: new Padding(
+          padding: _insetsForPainter() + widget.innerPadding,
+          child: widget.child,
+        ),
       ),
-      child: widget.child,
     );
   }
 }
@@ -172,8 +201,13 @@ class RadialSeekBarPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    final outerThickness = max(trackWidth, max(progressWidth, thumbSize));
+    Size constrainedSize = new Size(
+      size.width - outerThickness,
+      size.height - outerThickness,
+    );
     final center = new Offset(size.width / 2, size.height / 2);
-    final radius = min(size.width, size.height) / 2;
+    final radius = min(constrainedSize.width, constrainedSize.height) / 2;
     // paint track.
     canvas.drawCircle(
       center,
