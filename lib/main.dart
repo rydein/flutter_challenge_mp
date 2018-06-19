@@ -33,33 +33,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double _seekPercent = 0.50;
-  PolarCoord _startDragCoord;
-  double _startDragPercent;
-  double _currentDragPercent;
-
-  void _onDragStart(PolarCoord coord) {
-    _startDragCoord = coord;
-    _startDragPercent = _seekPercent;
-  }
-
-  void _onDragUpdate(PolarCoord coord) {
-    final dragAngle = coord.angle - _startDragCoord.angle;
-    final dragPercent = dragAngle / (2 * pi);
-
-    setState(
-        () => _currentDragPercent = (_startDragPercent + dragPercent) % 1.0);
-  }
-
-  void _onDragEnd() {
-    setState(() {
-          _seekPercent = _currentDragPercent;
-          _currentDragPercent = null;
-          _startDragCoord = null;
-          _startDragPercent = 0.0;
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -88,35 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           // Seek bar
           new Expanded(
-            child: new RadialDragGestureDetector(
-              onRadialDragStart: _onDragStart,
-              onRadialDragUpdate: _onDragUpdate,
-              onRadialDragEnd: _onDragEnd,
-              child: new Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: Colors.transparent,
-                child: new Center(
-                    child: new Container(
-                  width: 140.0,
-                  height: 140.0,
-                  child: new RadialProgressBar(
-                    trackColor: const Color(0xFFDDDDDD),
-                    progressPercent: _currentDragPercent ?? _seekPercent,
-                    progressColor: accentColor,
-                    thumbPosition: _currentDragPercent ?? _seekPercent,
-                    thumbColor: lightAccentColor,
-                    innerPadding: const EdgeInsets.all(10.0),
-                    child: new ClipOval(
-                      clipper: new CircleClipper(),
-                      child: new Image.network(
-                          demoPlaylist.songs[0].albumArtUrl,
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                )),
-              ),
-            ),
+            child: new RadialSeekBar(),
           ),
 
           // Visualizer
@@ -128,6 +73,92 @@ class _MyHomePageState extends State<MyHomePage> {
           // Song title, artist name, and controls
           new BottomControls(),
         ],
+      ),
+    );
+  }
+}
+
+class RadialSeekBar extends StatefulWidget {
+  final double seekPercent;
+
+  RadialSeekBar({
+    this.seekPercent = 0.0,
+  });
+
+  @override
+  RadialSeekBarState createState() {
+    return new RadialSeekBarState();
+  }
+}
+
+class RadialSeekBarState extends State<RadialSeekBar> {
+  double _seekPercent = 0.00;
+  PolarCoord _startDragCoord;
+  double _startDragPercent;
+  double _currentDragPercent;
+
+  @override
+  void initState() {
+    super.initState();
+    _seekPercent = widget.seekPercent;
+  }
+
+  @override
+  void didUpdateWidget(RadialSeekBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _seekPercent = widget.seekPercent;
+  }
+
+  void _onDragStart(PolarCoord coord) {
+    _startDragCoord = coord;
+    _startDragPercent = _seekPercent;
+  }
+
+  void _onDragUpdate(PolarCoord coord) {
+    final dragAngle = coord.angle - _startDragCoord.angle;
+    final dragPercent = dragAngle / (2 * pi);
+
+    setState(
+        () => _currentDragPercent = (_startDragPercent + dragPercent) % 1.0);
+  }
+
+  void _onDragEnd() {
+    setState(() {
+      _seekPercent = _currentDragPercent;
+      _currentDragPercent = null;
+      _startDragCoord = null;
+      _startDragPercent = 0.0;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new RadialDragGestureDetector(
+      onRadialDragStart: _onDragStart,
+      onRadialDragUpdate: _onDragUpdate,
+      onRadialDragEnd: _onDragEnd,
+      child: new Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.transparent,
+        child: new Center(
+            child: new Container(
+          width: 140.0,
+          height: 140.0,
+          child: new RadialProgressBar(
+            trackColor: const Color(0xFFDDDDDD),
+            progressPercent: _currentDragPercent ?? _seekPercent,
+            progressColor: accentColor,
+            thumbPosition: _currentDragPercent ?? _seekPercent,
+            thumbColor: lightAccentColor,
+            innerPadding: const EdgeInsets.all(10.0),
+            child: new ClipOval(
+              clipper: new CircleClipper(),
+              child: new Image.network(demoPlaylist.songs[0].albumArtUrl,
+                  fit: BoxFit.cover),
+            ),
+          ),
+        )),
       ),
     );
   }
