@@ -6,6 +6,7 @@ import 'package:flutter_challenge_mp/songs.dart';
 import 'package:flutter_challenge_mp/theme.dart';
 import 'package:meta/meta.dart';
 import 'package:fluttery/gestures.dart';
+import 'package:fluttery_audio/fluttery_audio.dart';
 
 void main() => runApp(new MyApp());
 
@@ -35,44 +36,48 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        leading: new IconButton(
-          icon: new Icon(
-            Icons.arrow_back_ios,
-          ),
-          color: const Color(0xFFDDDDDD),
-          onPressed: () {},
-        ),
-        title: new Text(''),
-        actions: <Widget>[
-          new IconButton(
+    return new Audio(
+      audioUrl: demoPlaylist.songs[0].audioUrl,
+      playbackState: PlaybackState.paused,
+      child: new Scaffold(
+        appBar: new AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          leading: new IconButton(
             icon: new Icon(
-              Icons.menu,
+              Icons.arrow_back_ios,
             ),
             color: const Color(0xFFDDDDDD),
             onPressed: () {},
           ),
-        ],
-      ),
-      body: new Column(
-        children: <Widget>[
-          // Seek bar
-          new Expanded(
-            child: new RadialSeekBar(),
-          ),
+          title: new Text(''),
+          actions: <Widget>[
+            new IconButton(
+              icon: new Icon(
+                Icons.menu,
+              ),
+              color: const Color(0xFFDDDDDD),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        body: new Column(
+          children: <Widget>[
+            // Seek bar
+            new Expanded(
+              child: new RadialSeekBar(),
+            ),
 
-          // Visualizer
-          new Container(
-            width: double.infinity,
-            height: 125.0,
-          ),
+            // Visualizer
+            new Container(
+              width: double.infinity,
+              height: 125.0,
+            ),
 
-          // Song title, artist name, and controls
-          new BottomControls(),
-        ],
+            // Song title, artist name, and controls
+            new BottomControls(),
+          ],
+        ),
       ),
     );
   }
