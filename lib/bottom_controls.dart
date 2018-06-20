@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_challenge_mp/theme.dart';
+import 'package:fluttery_audio/fluttery_audio.dart';
+
 
 class BottomControls extends StatelessWidget {
   @override
@@ -63,25 +65,43 @@ class BottomControls extends StatelessWidget {
 class PlayPauseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new RawMaterialButton(
+    return new AudioComponent(
+      updateMe: [
+        WatchableAudioProperties.audioPlayerState,
+      ],
+      playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
+      IconData icon = Icons.music_note;
+      Color buttonColor = lightAccentColor;
+      Function onPressed;
+
+      if (player.state == AudioPlayerState.playing) {
+        icon = Icons.pause;
+        onPressed = player.pause;
+        buttonColor = Colors.white;
+      } else if (player.state == AudioPlayerState.paused ||
+          player.state == AudioPlayerState.completed) {
+        icon = Icons.play_arrow;
+        onPressed = player.play;
+        buttonColor = Colors.white;
+      }
+      return new RawMaterialButton(
         shape: new CircleBorder(),
-        fillColor: Colors.white,
+        fillColor: buttonColor,
         splashColor: lightAccentColor,
-        highlightColor:
-            lightAccentColor.withOpacity(0.5),
+        highlightColor: lightAccentColor.withOpacity(0.5),
         elevation: 10.0,
         highlightElevation: 5.0,
-        onPressed: () {
-          // TODO
-        },
+        onPressed: onPressed,
         child: new Padding(
           padding: const EdgeInsets.all(8.0),
           child: new Icon(
-            Icons.play_arrow,
+            icon,
             color: darkAccentColor,
             size: 35.0,
           ),
-        ));
+        ),
+      );
+    });
   }
 }
 
