@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_challenge_mp/theme.dart';
 import 'package:fluttery_audio/fluttery_audio.dart';
 
-
 class BottomControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -66,58 +65,61 @@ class PlayPauseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new AudioComponent(
-      updateMe: [
-        WatchableAudioProperties.audioPlayerState,
-      ],
-      playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
-      IconData icon = Icons.music_note;
-      Color buttonColor = lightAccentColor;
-      Function onPressed;
+        updateMe: [
+          WatchableAudioProperties.audioPlayerState,
+        ],
+        playerBuilder:
+            (BuildContext context, AudioPlayer player, Widget child) {
+          IconData icon = Icons.music_note;
+          Color buttonColor = lightAccentColor;
+          Function onPressed;
 
-      if (player.state == AudioPlayerState.playing) {
-        icon = Icons.pause;
-        onPressed = player.pause;
-        buttonColor = Colors.white;
-      } else if (player.state == AudioPlayerState.paused ||
-          player.state == AudioPlayerState.completed) {
-        icon = Icons.play_arrow;
-        onPressed = player.play;
-        buttonColor = Colors.white;
-      }
-      return new RawMaterialButton(
-        shape: new CircleBorder(),
-        fillColor: buttonColor,
-        splashColor: lightAccentColor,
-        highlightColor: lightAccentColor.withOpacity(0.5),
-        elevation: 10.0,
-        highlightElevation: 5.0,
-        onPressed: onPressed,
-        child: new Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: new Icon(
-            icon,
-            color: darkAccentColor,
-            size: 35.0,
-          ),
-        ),
-      );
-    });
+          if (player.state == AudioPlayerState.playing) {
+            icon = Icons.pause;
+            onPressed = player.pause;
+            buttonColor = Colors.white;
+          } else if (player.state == AudioPlayerState.paused ||
+              player.state == AudioPlayerState.completed) {
+            icon = Icons.play_arrow;
+            onPressed = player.play;
+            buttonColor = Colors.white;
+          }
+          return new RawMaterialButton(
+            shape: new CircleBorder(),
+            fillColor: buttonColor,
+            splashColor: lightAccentColor,
+            highlightColor: lightAccentColor.withOpacity(0.5),
+            elevation: 10.0,
+            highlightElevation: 5.0,
+            onPressed: onPressed,
+            child: new Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: new Icon(
+                icon,
+                color: darkAccentColor,
+                size: 35.0,
+              ),
+            ),
+          );
+        });
   }
 }
 
 class PreviousButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new IconButton(
-      splashColor: lightAccentColor,
-      highlightColor: Colors.transparent,
-      icon: new Icon(
-        Icons.skip_previous,
-        color: Colors.white,
-        size: 35.0,
-      ),
-      onPressed: () {
-        // TODO
+    return new AudioPlaylistComponent(
+      playlistBuilder: (BuildContext context, Playlist playlist, Widget child) {
+        return new IconButton(
+          splashColor: lightAccentColor,
+          highlightColor: Colors.transparent,
+          icon: new Icon(
+            Icons.skip_previous,
+            color: Colors.white,
+            size: 35.0,
+          ),
+          onPressed: playlist.previous,
+        );
       },
     );
   }
@@ -126,16 +128,18 @@ class PreviousButton extends StatelessWidget {
 class NextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new IconButton(
-      splashColor: lightAccentColor,
-      highlightColor: Colors.transparent,
-      icon: new Icon(
-        Icons.skip_next,
-        color: Colors.white,
-        size: 35.0,
-      ),
-      onPressed: () {
-        // TODO
+    return new AudioPlaylistComponent(
+      playlistBuilder: (BuildContext context, Playlist playlist, Widget child) {
+        return new IconButton(
+          splashColor: lightAccentColor,
+          highlightColor: Colors.transparent,
+          icon: new Icon(
+            Icons.skip_next,
+            color: Colors.white,
+            size: 35.0,
+          ),
+          onPressed: playlist.next,
+        );
       },
     );
   }

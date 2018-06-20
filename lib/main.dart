@@ -37,8 +37,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Audio(
-      audioUrl: demoPlaylist.songs[0].audioUrl,
+    return new AudioPlaylist(
+      playlist: demoPlaylist.songs.map((DemoSong song) {
+        return song.audioUrl;
+      }).toList(growable: false),
       playbackState: PlaybackState.paused,
       child: new Scaffold(
         appBar: new AppBar(
