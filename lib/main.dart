@@ -65,7 +65,22 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             // Seek bar
             new Expanded(
-              child: new RadialSeekBar(),
+              child: new AudioComponent(
+                updateMe: [
+                  WatchableAudioProperties.audioPlayhead,
+                  WatchableAudioProperties.audioSeeking,
+                ],
+                playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
+                  double playbackProgress = 0.0;
+                  if (player.audioLength != null && player.position != null) {
+                    playbackProgress = player.position.inMilliseconds / player.audioLength.inMilliseconds;
+                  }
+
+                  return new RadialSeekBar(
+                    seekPercent: playbackProgress,
+                  );
+                },
+              ),
             ),
 
             // Visualizer
