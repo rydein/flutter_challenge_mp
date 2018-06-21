@@ -34,7 +34,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     return new AudioPlaylist(
@@ -68,7 +67,17 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             // Seek bar
             new Expanded(
-              child: new AudioRadialSeekBar(),
+              child: new AudioPlaylistComponent(
+                playlistBuilder:
+                    (BuildContext context, Playlist playlist, Widget child) {
+                  String albumArtUrl =
+                      demoPlaylist.songs[playlist.activeIndex].albumArtUrl;
+
+                  return new AudioRadialSeekBar(
+                    albumArtUrl: albumArtUrl,
+                  );
+                },
+              ),
             ),
 
             // Visualizer
@@ -87,6 +96,11 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class AudioRadialSeekBar extends StatefulWidget {
+  final String albumArtUrl;
+
+  AudioRadialSeekBar({
+    this.albumArtUrl,
+  });
 
   @override
   AudioRadialSeekBarState createState() {
@@ -95,7 +109,6 @@ class AudioRadialSeekBar extends StatefulWidget {
 }
 
 class AudioRadialSeekBarState extends State<AudioRadialSeekBar> {
-
   double _seekPercent;
 
   @override
@@ -108,36 +121,42 @@ class AudioRadialSeekBarState extends State<AudioRadialSeekBar> {
       playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
         double playbackProgress = 0.0;
         if (player.audioLength != null && player.position != null) {
-          playbackProgress = player.position.inMilliseconds / player.audioLength.inMilliseconds;
+          playbackProgress = player.position.inMilliseconds /
+              player.audioLength.inMilliseconds;
         }
 
         _seekPercent = player.isSeeking ? _seekPercent : null;
 
         return new RadialSeekBar(
-          progress: playbackProgress,
-          seekPercent: _seekPercent,
-          onSeekRequested: (double seekPercent) {
-            setState(() => _seekPercent = seekPercent);
+            progress: playbackProgress,
+            seekPercent: _seekPercent,
+            onSeekRequested: (double seekPercent) {
+              setState(() => _seekPercent = seekPercent);
 
-            final seekMillis = (player.audioLength.inMilliseconds * seekPercent).round();
-            player.seek(new Duration(milliseconds: seekMillis));
-          },
-        );
+              final seekMillis =
+                  (player.audioLength.inMilliseconds * seekPercent).round();
+              player.seek(new Duration(milliseconds: seekMillis));
+            },
+            child: new Container(
+              color: accentColor,
+              child: new Image.network(widget.albumArtUrl, fit: BoxFit.cover),
+            ));
       },
     );
   }
 }
 
 class RadialSeekBar extends StatefulWidget {
-
   final double progress;
   final double seekPercent;
   final Function(double) onSeekRequested;
+  final Widget child;
 
   RadialSeekBar({
     this.progress = 0.0,
     this.seekPercent = 0.0,
     this.onSeekRequested,
+    this.child,
   });
 
   @override
@@ -198,33 +217,31 @@ class RadialSeekBarState extends State<RadialSeekBar> {
     }
 
     return new RadialDragGestureDetector(
-      onRadialDragStart: _onDragStart,
-      onRadialDragUpdate: _onDragUpdate,
-      onRadialDragEnd: _onDragEnd,
-      child: new Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Colors.transparent,
-        child: new Center(
+        onRadialDragStart: _onDragStart,
+        onRadialDragUpdate: _onDragUpdate,
+        onRadialDragEnd: _onDragEnd,
+        child: new Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.transparent,
+          child: new Center(
             child: new Container(
-          width: 140.0,
-          height: 140.0,
-          child: new RadialProgressBar(
-            trackColor: const Color(0xFFDDDDDD),
-            progressPercent: _progress,
-            progressColor: accentColor,
-            thumbPosition: thumbPosition,
-            thumbColor: lightAccentColor,
-            innerPadding: const EdgeInsets.all(10.0),
-            child: new ClipOval(
-              clipper: new CircleClipper(),
-              child: new Image.network(demoPlaylist.songs[0].albumArtUrl,
-                  fit: BoxFit.cover),
-            ),
+                width: 140.0,
+                height: 140.0,
+                child: new RadialProgressBar(
+                  trackColor: const Color(0xFFDDDDDD),
+                  progressPercent: _progress,
+                  progressColor: accentColor,
+                  thumbPosition: thumbPosition,
+                  thumbColor: lightAccentColor,
+                  innerPadding: const EdgeInsets.all(10.0),
+                  child: new ClipOval(
+                    clipper: new CircleClipper(),
+                    child: widget.child,
+                  ),
+                )),
           ),
-        )),
-      ),
-    );
+        ));
   }
 }
 
